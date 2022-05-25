@@ -167,6 +167,7 @@
           <div class="overflow-y-scroll h-50 my-1">
             <v-data-table
               :headers="headers"
+              @click:row="changeSong"
               :items="desserts"
               hide-default-footer
               class="songsList"
@@ -200,7 +201,11 @@
                 class="play-control__main flex justify-center items-center gap-2"
                 data-v-cd2eed4a=""
               >
-                <div class="text-gray-500 text-sm" data-v-cd2eed4a="">
+                <div
+                  class="text-gray-500 text-sm"
+                  data-v-cd2eed4a=""
+                  @click="playAgain()"
+                >
                   <i class="fas fa-redo-alt play-repeat" data-v-cd2eed4a=""></i>
                 </div>
                 <div class="" data-v-cd2eed4a="">
@@ -267,7 +272,7 @@
               data-v-cd2eed4a=""
             >
               <div class="timer__left" data-v-cd2eed4a="">
-                {{ currentSeconds }}
+                {{ currentSecondsDisplay }}
               </div>
               <div class="slidecontainer2 relative" data-v-cd2eed4a="">
                 <span
@@ -276,8 +281,8 @@
                 ></span
                 ><input
                   type="range"
-                  value="0"
-                  :min="currentSeconds"
+                  :value="currentSeconds"
+                  min="0"
                   :max="durationSeconds"
                   class="slider2"
                   id="myRange2"
@@ -294,7 +299,7 @@
                 data-v-cd2eed4a=""
               ></audio>
               <div class="timer__right" data-v-cd2eed4a="">
-                {{ durationSeconds }}
+                {{ durationSecondsDisplay }}
               </div>
             </div>
           </div>
@@ -561,79 +566,93 @@ export default {
         title: "Song 1",
         artist: "Singer 1",
         time: "1:50 mins",
+        file: "dummy_audio.mp3",
       },
       {
         songid: 2,
         title: "Song 2",
         artist: "Singer 2",
         time: "2:20 mins",
+        file: "dummy_audio.mp3",
       },
       {
         songid: 3,
         title: "Song 3",
         artist: "Singer 3",
         time: "2:50 mins",
+        file: "dummy_audio.mp3",
       },
       {
         songid: 4,
         title: "Song 4",
         artist: "Singer 4",
         time: "3:50 mins",
+        file: "dummy_audio.mp3",
       },
       {
         songid: 1,
         title: "Song 1",
         artist: "Singer 1",
         time: "1:50 mins",
+        file: "dummy_audio.mp3",
       },
       {
         songid: 2,
         title: "Song 2",
         artist: "Singer 2",
         time: "2:20 mins",
+        file: "dummy_audio.mp3",
       },
       {
         songid: 3,
         title: "Song 3",
         artist: "Singer 3",
         time: "2:50 mins",
+        file: "dummy_audio.mp3",
       },
       {
         songid: 4,
         title: "Song 4",
         artist: "Singer 4",
         time: "3:50 mins",
+        file: "dummy_audio.mp3",
       },
       {
         songid: 1,
         title: "Song 1",
         artist: "Singer 1",
         time: "1:50 mins",
+        file: "dummy_audio.mp3",
       },
       {
         songid: 2,
         title: "Song 2",
         artist: "Singer 2",
         time: "2:20 mins",
+        file: "dummy_audio.mp3",
       },
       {
         songid: 3,
         title: "Song 3",
         artist: "Singer 3",
         time: "2:50 mins",
+        file: "dummy_audio.mp3",
       },
       {
         songid: 4,
         title: "Song 4",
         artist: "Singer 4",
         time: "3:50 mins",
+        file: "dummy_audio.mp3",
       },
     ],
-    currentTime: "0:00",
+    currentTime: "00:00",
     audio: undefined,
     duration: 0,
     currentSeconds: 0,
+    currentSecondsDisplay: "00:00",
     durationSeconds: 0,
+    durationSecondsDisplay: "00:00",
     innerLoop: false,
     loaded: false,
     playing: false,
@@ -697,14 +716,29 @@ export default {
       this.stop();
       window.open(this.file, "download");
     },
+    changeSong(item) {
+      this.toggleSound();
+      this.audio.src = require("@/assets/" + item.file);
+      this.playAgain();
+      this.toggleSound();
+    },
     load() {
       if (this.audio.readyState >= 2) {
         this.loaded = true;
         this.durationSeconds = parseInt(this.audio.duration);
+        this.durationSecondsDisplay = this.convertTimeHHMMSS(
+          this.durationSeconds
+        );
         return (this.playing = this.autoPlay);
       }
 
       throw new Error("Failed to load sound file.");
+    },
+    playAgain() {
+      this.audio.currentTime = 0;
+      this.currentTime = 0;
+      this.currentSecondsDisplay = "00:00";
+      document.getElementById("myRange2").value = 0;
     },
     mute() {
       if (this.muted) {
@@ -721,6 +755,7 @@ export default {
       let seekbar = document.getElementById("myRange2");
       this.audio.currentTime = seekbar.value;
       this.currentSeconds = this.audio.currentTime;
+      this.currentSecondsDisplay = this.convertTimeHHMMSS(this.currentSeconds);
     },
     stop() {
       this.playing = false;
@@ -728,6 +763,9 @@ export default {
     },
     update() {
       this.currentSeconds = parseInt(this.audio.currentTime);
+      // let seekbar = document.getElementById("myRange2");
+      // seekbar.value = this.currentSeconds;
+      this.currentSecondsDisplay = this.convertTimeHHMMSS(this.currentSeconds);
     },
   },
   created() {
@@ -735,7 +773,6 @@ export default {
   },
   mounted() {
     this.audio = this.$refs.audio;
-    this.duration = this.audio.duration;
     this.audio.addEventListener("timeupdate", this.update);
     this.audio.addEventListener("loadeddata", this.load);
     this.audio.addEventListener("pause", () => {
