@@ -1,24 +1,20 @@
 <template>
-  <v-app>
+  <div id="app">
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
     />
     <!-- <v-main> -->
-    <HelloWorld />
+    <router-view></router-view>
     <!-- </v-main> -->
-  </v-app>
+  </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
-
 export default {
-  name: "App",
+  name: "app",
 
-  components: {
-    HelloWorld,
-  },
+  components: {},
 
   data: () => ({
     //

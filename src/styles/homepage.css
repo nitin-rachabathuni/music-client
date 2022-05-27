@@ -25,6 +25,23 @@
   border: 1px solid rgba(217, 217, 217, 1);
 }
 
+.manage-content {
+  border-radius: 1.5rem;
+  background-color: rgba(231, 232, 243, 1) !important;
+  --tw-shadow-color: rgb(209 213 219);
+  --tw-shadow: var(--tw-shadow-colored);
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color),
+    0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  display: grid;
+  border: 1px solid rgba(217, 217, 217, 1);
+}
+
+.tableHeight {
+  height: 100vh;
+}
+
 .music_row:hover {
   background-color: white;
 }
@@ -1101,4 +1118,7 @@ i[data-v-cd2eed4a] {
 }
 .v-application p {
   margin-bottom: 0 !important;
+}
+.theme--light.v-toolbar.v-sheet {
+  background-color: transparent !important;
 }
