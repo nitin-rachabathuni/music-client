@@ -63,35 +63,63 @@
                       <v-card-text>
                         <v-container>
                           <v-row>
-                            <v-col cols="12" sm="6" md="4">
+                            <v-col cols="12" sm="12" md="12">
                               <v-text-field
                                 v-model="editedItem.name"
-                                label="Dessert name"
+                                label="Song Name"
                               ></v-text-field>
                             </v-col>
-                            <v-col cols="12" sm="6" md="4">
+                            <v-col cols="12" sm="12" md="12">
                               <v-text-field
-                                v-model="editedItem.calories"
-                                label="Calories"
+                                v-model="editedItem.url"
+                                label="Song Link"
                               ></v-text-field>
                             </v-col>
-                            <v-col cols="12" sm="6" md="4">
+                            <v-col cols="12" sm="12" md="12">
                               <v-text-field
-                                v-model="editedItem.fat"
-                                label="Fat (g)"
+                                v-model="editedItem.artist"
+                                label="Song Artist"
                               ></v-text-field>
                             </v-col>
-                            <v-col cols="12" sm="6" md="4">
-                              <v-text-field
-                                v-model="editedItem.carbs"
-                                label="Carbs (g)"
-                              ></v-text-field>
-                            </v-col>
-                            <v-col cols="12" sm="6" md="4">
-                              <v-text-field
-                                v-model="editedItem.protein"
-                                label="Protein (g)"
-                              ></v-text-field>
+                            <!-- <v-col cols="12" sm="12" md="12">
+                              <v-file-input
+                                v-model="editedItem.image"
+                                @change="onFileChange"
+                                label="Cover"
+                              ></v-file-input>
+                            </v-col> -->
+                            <v-col cols="12" sm="12" md="12">
+                              <v-menu
+                                ref="menu"
+                                v-model="menu2"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                :return-value.sync="editedItem.duration"
+                                transition="scale-transition"
+                                offset-y
+                                max-width="290px"
+                                min-width="290px"
+                              >
+                                <template v-slot:activator="{ on, attrs }">
+                                  <v-text-field
+                                    v-model="editedItem.duration"
+                                    label="Duration"
+                                    prepend-icon="mdi-clock-time-four-outline"
+                                    readonly
+                                    v-bind="attrs"
+                                    v-on="on"
+                                  ></v-text-field>
+                                </template>
+                                <v-time-picker
+                                  v-if="menu2"
+                                  v-model="editedItem.duration"
+                                  format="24hr"
+                                  full-width
+                                  @click:minute="
+                                    $refs.menu.save(editedItem.duration)
+                                  "
+                                ></v-time-picker>
+                              </v-menu>
                             </v-col>
                           </v-row>
                         </v-container>
@@ -175,27 +203,34 @@ export default {
       },
       { text: "TITLE", align: "center", value: "name" },
       { text: "ARTIST", align: "center", value: "artist" },
-      { text: "TIME", align: "center", value: "created_date" },
+      { text: "TIME", align: "center", value: "duration" },
       { text: "Actions", align: "center", value: "actions", sortable: false },
     ],
     desserts: [],
     editedIndex: -1,
     editedItem: {
-      songId: 1,
-      title: "",
+      name: "",
       artist: "",
-      time: 0,
+      url: "",
+      image: "",
+      duration: "",
     },
     defaultItem: {
-      songId: 1,
-      title: "",
+      name: "",
       artist: "",
-      time: 0,
+      url: "",
+      image: "",
+      duration: "",
     },
+    dialog: false,
+    dialogDelete: false,
+    menu2: false,
+    modal2: false,
+    selectedFile: "",
   }),
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+      return this.editedIndex === -1 ? "New Song" : "Edit Item";
     },
   },
   watch: {
@@ -215,6 +250,10 @@ export default {
         this.desserts = response.data;
       });
     },
+    onFileChange(e) {
+      const selectedFile = e; // accessing file
+      this.selectedFile = selectedFile;
+    },
     ditItem(item) {
       this.editedIndex = this.desserts.indexOf(item);
       this.editedItem = Object.assign({}, item);
@@ -228,8 +267,14 @@ export default {
     },
 
     deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
-      this.closeDelete();
+      axios
+        .delete(
+          `http://localhost:3000/songs/${this.desserts[this.editedIndex].id}`
+        )
+        .then(() => {
+          this.desserts.splice(this.editedIndex, 1);
+          this.closeDelete();
+        });
     },
 
     close() {
@@ -252,9 +297,23 @@ export default {
       if (this.editedIndex > -1) {
         Object.assign(this.desserts[this.editedIndex], this.editedItem);
       } else {
-        this.desserts.push(this.editedItem);
+        // const formData = new FormData();
+        // formData.append("file", this.selectedFile);
+        // this.editedItem.image = this.selectedFile;
+        this.editedItem.image = "mic Test";
+
+        axios
+          .post("http://localhost:3000/songs", this.editedItem)
+          .then((response) => {
+            this.desserts.push({
+              id: response.data.data,
+              name: this.editedItem.name,
+              artist: this.editedItem.artist,
+              duration: this.editedItem.duration,
+            });
+            this.close();
+          });
       }
-      this.close();
     },
   },
   mounted() {},

@@ -87,7 +87,57 @@
                 data-v-50279bc2=""
               />
               <p class="text-sm cursor-pointer" data-v-50279bc2="">
-                thuongtruong1009
+                <v-dialog v-model="dialog" max-width="500px">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      class="mange_btn"
+                      elevation="0"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      Manage
+                    </v-btn>
+                  </template>
+                  <v-card>
+                    <v-card-title>
+                      <span class="text-h5">{{ formTitle }}</span>
+                    </v-card-title>
+
+                    <v-card-text>
+                      <v-container>
+                        <v-row>
+                          <v-col cols="12" sm="12" md="12">
+                            <v-text-field
+                              label="Username"
+                              value="Admin"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="12" sm="12" md="12">
+                            <v-text-field
+                              value="Password"
+                              label="Password"
+                              :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                              :type="show1 ? 'text' : 'password'"
+                              name="password"
+                              hint="At least 8 characters"
+                              @click:append="show1 = !show1"
+                            ></v-text-field>
+                          </v-col>
+                        </v-row>
+                      </v-container>
+                    </v-card-text>
+
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="blue darken-1" text @click="close">
+                        Cancel
+                      </v-btn>
+                      <v-btn color="blue darken-1" text @click="login">
+                        login
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </p>
             </div></a
           ><a href="/about" class="" data-v-50279bc2=""
@@ -291,7 +341,7 @@
                 />
               </div>
               <audio
-                src="../assets/dummy_audio.mp3"
+                src="http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3"
                 loop
                 id="audio"
                 muted
@@ -566,86 +616,87 @@ export default {
         title: "Song 1",
         artist: "Singer 1",
         time: "1:50 mins",
-        file: "dummy_audio.mp3",
+        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
       },
       {
         songid: 2,
         title: "Song 2",
         artist: "Singer 2",
         time: "2:20 mins",
-        file: "dummy_audio.mp3",
+        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
       },
       {
         songid: 3,
         title: "Song 3",
         artist: "Singer 3",
         time: "2:50 mins",
-        file: "dummy_audio.mp3",
+        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
       },
       {
         songid: 4,
         title: "Song 4",
         artist: "Singer 4",
         time: "3:50 mins",
-        file: "dummy_audio.mp3",
+        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
       },
       {
         songid: 1,
         title: "Song 1",
         artist: "Singer 1",
         time: "1:50 mins",
-        file: "dummy_audio.mp3",
+        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
       },
       {
         songid: 2,
         title: "Song 2",
         artist: "Singer 2",
         time: "2:20 mins",
-        file: "dummy_audio.mp3",
+        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
       },
       {
         songid: 3,
         title: "Song 3",
         artist: "Singer 3",
         time: "2:50 mins",
-        file: "dummy_audio.mp3",
+        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
       },
       {
         songid: 4,
         title: "Song 4",
         artist: "Singer 4",
         time: "3:50 mins",
-        file: "dummy_audio.mp3",
+        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
       },
       {
         songid: 1,
         title: "Song 1",
         artist: "Singer 1",
         time: "1:50 mins",
-        file: "dummy_audio.mp3",
+        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
       },
       {
         songid: 2,
         title: "Song 2",
         artist: "Singer 2",
         time: "2:20 mins",
-        file: "dummy_audio.mp3",
+        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
       },
       {
         songid: 3,
         title: "Song 3",
         artist: "Singer 3",
         time: "2:50 mins",
-        file: "dummy_audio.mp3",
+        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
       },
       {
         songid: 4,
         title: "Song 4",
         artist: "Singer 4",
         time: "3:50 mins",
-        file: "dummy_audio.mp3",
+        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
       },
     ],
+    show1: false,
     currentTime: "00:00",
     audio: undefined,
     duration: 0,
@@ -659,6 +710,7 @@ export default {
     previousVolume: 35,
     showVolume: false,
     volume: 100,
+    dialog: false,
   }),
   computed: {
     currentTimeSec() {
@@ -687,6 +739,12 @@ export default {
     },
   },
   methods: {
+    login() {
+      this.$router.push("manage");
+    },
+    close() {
+      this.dialog = false;
+    },
     convertTimeHHMMSS(val) {
       let hhmmss = new Date(val * 1000).toISOString().substr(11, 8);
 
@@ -717,10 +775,14 @@ export default {
       window.open(this.file, "download");
     },
     changeSong(item) {
-      this.toggleSound();
-      this.audio.src = require("@/assets/" + item.file);
-      this.playAgain();
-      this.toggleSound();
+      // this.toggleSound();
+      this.audio.pause();
+      this.audio.src = item.file;
+      this.audio.load();
+      this.audio.play();
+      // this.audio.src = require("@/assets/" + item.file);
+      // this.toggleSound();
+      // this.playAgain();
     },
     load() {
       if (this.audio.readyState >= 2) {
