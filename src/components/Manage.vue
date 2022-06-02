@@ -77,6 +77,12 @@
                             </v-col>
                             <v-col cols="12" sm="12" md="12">
                               <v-text-field
+                                v-model="editedItem.album"
+                                label="Album"
+                              ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="12" md="12">
+                              <v-text-field
                                 v-model="editedItem.artist"
                                 label="Song Artist"
                               ></v-text-field>
@@ -204,6 +210,8 @@ export default {
       { text: "TITLE", align: "center", value: "name" },
       { text: "ARTIST", align: "center", value: "artist" },
       { text: "TIME", align: "center", value: "duration" },
+      { text: "ALBUM", align: "center", value: "album" },
+      // { text: "URL", align: " d-none", value: "url" },
       { text: "Actions", align: "center", value: "actions", sortable: false },
     ],
     desserts: [],
@@ -213,6 +221,7 @@ export default {
       artist: "",
       url: "",
       image: "",
+      album: "",
       duration: "",
     },
     defaultItem: {
@@ -220,6 +229,7 @@ export default {
       artist: "",
       url: "",
       image: "",
+      album: "",
       duration: "",
     },
     dialog: false,
@@ -266,6 +276,13 @@ export default {
       this.dialogDelete = true;
     },
 
+    editItem(item) {
+      this.editedIndex = this.desserts.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialog = true;
+      // this.dialogDelete = true;
+    },
+
     deleteItemConfirm() {
       axios
         .delete(
@@ -294,8 +311,20 @@ export default {
     },
 
     save() {
+      console.log(this.editedIndex);
       if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+        this.editedItem.image = "mic Test";
+
+        axios.put("http://localhost:3000/songs", this.editedItem).then(() => {
+          Object.assign(this.desserts[this.editedIndex], this.editedItem);
+          // this.desserts.push({
+          //   id: response.data.data,
+          //   name: this.editedItem.name,
+          //   artist: this.editedItem.artist,
+          //   duration: this.editedItem.duration,
+          // });
+          this.close();
+        });
       } else {
         // const formData = new FormData();
         // formData.append("file", this.selectedFile);
@@ -310,6 +339,7 @@ export default {
               name: this.editedItem.name,
               artist: this.editedItem.artist,
               duration: this.editedItem.duration,
+              album: this.editedItem.album,
             });
             this.close();
           });

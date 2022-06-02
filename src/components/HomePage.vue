@@ -56,7 +56,7 @@
             </p>
             <ul data-v-50279bc2="">
               <li data-v-50279bc2="">
-                <a href="#" data-v-50279bc2=""
+                <a href="#" @click="favourite()" data-v-50279bc2=""
                   ><i class="far fa-heart" data-v-50279bc2=""></i>Favorite
                   Songs</a
                 >
@@ -172,6 +172,7 @@
               <i class="fas fa-search search-btn" data-v-cd2eed4a=""></i
               ><input
                 type="text"
+                @change="searchSong"
                 class="search-input outline-none border-none bg-transparent w-full placeholder-gray-400"
                 placeholder="Search for artist, songs and..."
                 data-v-cd2eed4a=""
@@ -211,17 +212,35 @@
             </div>
           </div>
           <div class="table_header">
-            <h4>Top 100 VN</h4>
+            <v-tabs v-model="tab" align-with-title>
+              <v-tabs-slider color="yellow"></v-tabs-slider>
+              <v-tab> Songs </v-tab>
+              <v-tab> Albums </v-tab>
+            </v-tabs>
             <span>Show all</span>
           </div>
           <div class="overflow-y-scroll h-50 my-1">
-            <v-data-table
-              :headers="headers"
-              @click:row="changeSong"
-              :items="desserts"
-              hide-default-footer
-              class="songsList"
-            ></v-data-table>
+            <v-tabs-items v-model="tab">
+              <v-tab-item :key="songs">
+                <v-data-table
+                  :headers="headers"
+                  :search="search"
+                  @click:row="changeSong"
+                  :items="desserts"
+                  hide-default-footer
+                  class="songsList"
+                ></v-data-table>
+              </v-tab-item>
+              <v-tab-item :key="albums">
+                <v-data-table
+                  :headers="headersAlbum"
+                  @click:row="getSongs"
+                  :items="albums"
+                  hide-default-footer
+                  class="songsList"
+                ></v-data-table>
+              </v-tab-item>
+            </v-tabs-items>
           </div>
           <div class="play-song p-3 bg-white rounded-lg" data-v-cd2eed4a="">
             <div
@@ -583,6 +602,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "HomePage",
   props: {
@@ -604,100 +624,21 @@ export default {
       {
         text: "#",
         align: "center",
-        value: "songid",
+        value: "id",
       },
-      { text: "TITLE", align: "center", value: "title" },
+      { text: "TITLE", align: "center", value: "name" },
       { text: "ARTIST", align: "center", value: "artist" },
-      { text: "TIME", align: "center", value: "time" },
+      { text: "TIME", align: "center", value: "duration" },
     ],
-    desserts: [
-      {
-        songid: 1,
-        title: "Song 1",
-        artist: "Singer 1",
-        time: "1:50 mins",
-        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
-      },
-      {
-        songid: 2,
-        title: "Song 2",
-        artist: "Singer 2",
-        time: "2:20 mins",
-        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
-      },
-      {
-        songid: 3,
-        title: "Song 3",
-        artist: "Singer 3",
-        time: "2:50 mins",
-        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
-      },
-      {
-        songid: 4,
-        title: "Song 4",
-        artist: "Singer 4",
-        time: "3:50 mins",
-        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
-      },
-      {
-        songid: 1,
-        title: "Song 1",
-        artist: "Singer 1",
-        time: "1:50 mins",
-        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
-      },
-      {
-        songid: 2,
-        title: "Song 2",
-        artist: "Singer 2",
-        time: "2:20 mins",
-        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
-      },
-      {
-        songid: 3,
-        title: "Song 3",
-        artist: "Singer 3",
-        time: "2:50 mins",
-        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
-      },
-      {
-        songid: 4,
-        title: "Song 4",
-        artist: "Singer 4",
-        time: "3:50 mins",
-        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
-      },
-      {
-        songid: 1,
-        title: "Song 1",
-        artist: "Singer 1",
-        time: "1:50 mins",
-        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
-      },
-      {
-        songid: 2,
-        title: "Song 2",
-        artist: "Singer 2",
-        time: "2:20 mins",
-        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
-      },
-      {
-        songid: 3,
-        title: "Song 3",
-        artist: "Singer 3",
-        time: "2:50 mins",
-        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
-      },
-      {
-        songid: 4,
-        title: "Song 4",
-        artist: "Singer 4",
-        time: "3:50 mins",
-        file: "http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3",
-      },
-    ],
+    desserts: [],
+    headersAlbum: [{ text: "ALBUM", align: "left", value: "album" }],
+    albums: [],
+    tab: null,
+    items: ["Songs", "Albums"],
+    search: "",
     show1: false,
     currentTime: "00:00",
+    currentSong: 0,
     audio: undefined,
     duration: 0,
     currentSeconds: 0,
@@ -739,6 +680,24 @@ export default {
     },
   },
   methods: {
+    initialize() {
+      axios.get("http://localhost:3000/songs").then((response) => {
+        this.desserts = response.data;
+      });
+      axios.get("http://localhost:3000/albums").then((response) => {
+        this.albums = response.data;
+      });
+    },
+    getSongs(item) {
+      axios
+        .get(`http://localhost:3000/albums/${item.album}`)
+        .then((response) => {
+          this.desserts = response.data;
+        });
+    },
+    searchSong(e) {
+      this.search = e.target.value;
+    },
     login() {
       this.$router.push("manage");
     },
@@ -754,7 +713,6 @@ export default {
       this.audio.volume = document.getElementById("myRange1").value / 100;
     },
     toggleSound() {
-      let audio = this.$refs.audio;
       let pause = document.getElementById("fa-pause");
       let play = document.getElementById("fa-play");
       if (pause.style.display === "none") {
@@ -764,10 +722,10 @@ export default {
         play.style.display = "block";
         pause.style.display = "none";
       }
-      if (audio.paused) {
-        audio.play();
+      if (this.audio.paused) {
+        this.audio.play();
       } else {
-        audio.pause();
+        this.audio.pause();
       }
     },
     download() {
@@ -775,11 +733,11 @@ export default {
       window.open(this.file, "download");
     },
     changeSong(item) {
+      this.currentSong = item.id;
+      this.audio.src = item.url;
+      // this.audio.load();
       // this.toggleSound();
-      this.audio.pause();
-      this.audio.src = item.file;
-      this.audio.load();
-      this.audio.play();
+      // this.audio.play();
       // this.audio.src = require("@/assets/" + item.file);
       // this.toggleSound();
       // this.playAgain();
@@ -832,6 +790,7 @@ export default {
   },
   created() {
     this.innerLoop = this.loop;
+    this.initialize();
   },
   mounted() {
     this.audio = this.$refs.audio;
