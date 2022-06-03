@@ -56,7 +56,7 @@
             </p>
             <ul data-v-50279bc2="">
               <li data-v-50279bc2="">
-                <a href="#" @click="favourite()" data-v-50279bc2=""
+                <a href="#" data-v-50279bc2=""
                   ><i class="far fa-heart" data-v-50279bc2=""></i>Favorite
                   Songs</a
                 >
@@ -214,14 +214,14 @@
           <div class="table_header">
             <v-tabs v-model="tab" align-with-title>
               <v-tabs-slider color="yellow"></v-tabs-slider>
-              <v-tab> Songs </v-tab>
-              <v-tab> Albums </v-tab>
+              <v-tab :key="0" :href="`#tab-0`"> Songs </v-tab>
+              <v-tab :key="1" :href="`#tab-1`"> Albums </v-tab>
             </v-tabs>
-            <span>Show all</span>
+            <span @click="getAllSongs">Show all</span>
           </div>
           <div class="overflow-y-scroll h-50 my-1">
             <v-tabs-items v-model="tab">
-              <v-tab-item :key="songs">
+              <v-tab-item :key="0" :id="`tab-0`">
                 <v-data-table
                   :headers="headers"
                   :search="search"
@@ -231,7 +231,7 @@
                   class="songsList"
                 ></v-data-table>
               </v-tab-item>
-              <v-tab-item :key="albums">
+              <v-tab-item :key="1" :id="`tab-1`">
                 <v-data-table
                   :headers="headersAlbum"
                   @click:row="getSongs"
@@ -251,11 +251,21 @@
                 class="play-control__act flex justify-start items-center text-gray-500 gap-2"
                 data-v-cd2eed4a=""
               >
-                <div class="p-1 rounded-md" data-v-cd2eed4a="">
-                  <i class="far fa-heart" data-v-cd2eed4a=""></i
+                <div
+                  class="p-1 rounded-md"
+                  data-v-cd2eed4a=""
+                  @click="favourite()"
+                >
+                  <i
+                    class="far fa-heart"
+                    data-v-cd2eed4a=""
+                    id="favSong"
+                    style="display: block"
+                  ></i
                   ><i
                     class="fas fa-heart text-red-600"
                     data-v-cd2eed4a=""
+                    id="favSong2"
                     style="display: none"
                   ></i>
                 </div>
@@ -360,7 +370,6 @@
                 />
               </div>
               <audio
-                src="http://sheelat.com/uploads/songs/shylt_6al_alfrak_916.mp3"
                 loop
                 id="audio"
                 muted
@@ -423,10 +432,26 @@
             </div>
           </div>
           <div class="sidebar__favorite" data-v-060adb97="">
-            <p class="sidebar__favorite-title" data-v-060adb97="">
-              Favorite Artists
-            </p>
-            <div
+            <!-- <p class="sidebar__favorite-title" data-v-060adb97=""></p> -->
+            <v-list flat>
+              <v-subheader>Favorite Artists</v-subheader>
+              <v-list-item-group v-model="selectedItem" color="primary">
+                <v-list-item v-for="item in favSongs" :key="item.id">
+                  <v-list-item-icon>
+                    <img
+                      src="../assets/tóc-tiên.jpg"
+                      alt=""
+                      class="w-8 h-8 rounded-full"
+                      data-v-060adb97=""
+                    />
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title v-text="item.name"></v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+            <!-- <div
               class="sidebar__favorite-list flex justify-between items-center p-1.5 text-sm"
               data-v-060adb97=""
             >
@@ -461,115 +486,7 @@
               >
                 <i class="fas fa-ellipsis-h" data-v-060adb97=""></i>
               </div>
-            </div>
-            <div
-              class="sidebar__favorite-list flex justify-between items-center p-1.5 text-sm"
-              data-v-060adb97=""
-            >
-              <div
-                class="artist-info__avt flex items-center"
-                data-v-060adb97=""
-              >
-                <img
-                  src="../assets/tóc-tiên.jpg"
-                  alt=""
-                  class="w-8 h-8 rounded-full"
-                  data-v-060adb97=""
-                />
-                <div class="artist-info ml-2" data-v-060adb97="">
-                  <h4
-                    class="artist-info__name font-semibold text-xs"
-                    data-v-060adb97=""
-                  >
-                    Tóc Tiên
-                  </h4>
-                  <p
-                    class="artist-info__song text-xs text-gray-500"
-                    data-v-060adb97=""
-                  >
-                    6 songs in library
-                  </p>
-                </div>
-              </div>
-              <div
-                class="text-gray-400 text-xs cursor-pointer"
-                data-v-060adb97=""
-              >
-                <i class="fas fa-ellipsis-h" data-v-060adb97=""></i>
-              </div>
-            </div>
-            <div
-              class="sidebar__favorite-list flex justify-between items-center p-1.5 text-sm"
-              data-v-060adb97=""
-            >
-              <div
-                class="artist-info__avt flex items-center"
-                data-v-060adb97=""
-              >
-                <img
-                  src="../assets/tóc-tiên.jpg"
-                  alt=""
-                  class="w-8 h-8 rounded-full"
-                  data-v-060adb97=""
-                />
-                <div class="artist-info ml-2" data-v-060adb97="">
-                  <h4
-                    class="artist-info__name font-semibold text-xs"
-                    data-v-060adb97=""
-                  >
-                    Tóc Tiên
-                  </h4>
-                  <p
-                    class="artist-info__song text-xs text-gray-500"
-                    data-v-060adb97=""
-                  >
-                    6 songs in library
-                  </p>
-                </div>
-              </div>
-              <div
-                class="text-gray-400 text-xs cursor-pointer"
-                data-v-060adb97=""
-              >
-                <i class="fas fa-ellipsis-h" data-v-060adb97=""></i>
-              </div>
-            </div>
-            <div
-              class="sidebar__favorite-list flex justify-between items-center p-1.5 text-sm"
-              data-v-060adb97=""
-            >
-              <div
-                class="artist-info__avt flex items-center"
-                data-v-060adb97=""
-              >
-                <img
-                  src="../assets/tóc-tiên.jpg"
-                  alt=""
-                  class="w-8 h-8 rounded-full"
-                  data-v-060adb97=""
-                />
-                <div class="artist-info ml-2" data-v-060adb97="">
-                  <h4
-                    class="artist-info__name font-semibold text-xs"
-                    data-v-060adb97=""
-                  >
-                    Tóc Tiên
-                  </h4>
-                  <p
-                    class="artist-info__song text-xs text-gray-500"
-                    data-v-060adb97=""
-                  >
-                    6 songs in library
-                  </p>
-                </div>
-              </div>
-              <div
-                class="text-gray-400 text-xs cursor-pointer"
-                data-v-060adb97=""
-              >
-                <i class="fas fa-ellipsis-h" data-v-060adb97=""></i>
-              </div>
-            </div>
+            </div> -->
           </div>
           <div class="sidebar__suggest-album cursor-pointer" data-v-060adb97="">
             <div
@@ -633,12 +550,14 @@ export default {
     desserts: [],
     headersAlbum: [{ text: "ALBUM", align: "left", value: "album" }],
     albums: [],
+    favSongs: [],
     tab: null,
     items: ["Songs", "Albums"],
     search: "",
     show1: false,
     currentTime: "00:00",
     currentSong: 0,
+    fav: false,
     audio: undefined,
     duration: 0,
     currentSeconds: 0,
@@ -687,13 +606,39 @@ export default {
       axios.get("http://localhost:3000/albums").then((response) => {
         this.albums = response.data;
       });
+      axios.get("http://localhost:3000/songs/fav").then((response) => {
+        this.favSongs = response.data;
+      });
+    },
+    favourite() {
+      axios
+        .put("http://localhost:3000/songs/fav", {
+          id: this.currentSong,
+          fav: !this.fav,
+        })
+        .then(() => {
+          this.fav = !this.fav;
+          if (this.fav) {
+            document.getElementById("favSong").style.display = "none";
+            document.getElementById("favSong2").style.display = "block";
+          } else {
+            document.getElementById("favSong").style.display = "block";
+            document.getElementById("favSong2").style.display = "none";
+          }
+        });
     },
     getSongs(item) {
       axios
         .get(`http://localhost:3000/albums/${item.album}`)
         .then((response) => {
           this.desserts = response.data;
+          this.tab = `tab-0`;
         });
+    },
+    getAllSongs() {
+      axios.get(`http://localhost:3000/songs`).then((response) => {
+        this.desserts = response.data;
+      });
     },
     searchSong(e) {
       this.search = e.target.value;
@@ -735,9 +680,15 @@ export default {
     changeSong(item) {
       this.currentSong = item.id;
       this.audio.src = item.url;
-      // this.audio.load();
+      this.fav = item.fav;
+      if (item.fav) {
+        document.getElementById("favSong").style.display = "none";
+        document.getElementById("favSong2").style.display = "block";
+      } else {
+        document.getElementById("favSong").style.display = "block";
+        document.getElementById("favSong2").style.display = "none";
+      }
       // this.toggleSound();
-      // this.audio.play();
       // this.audio.src = require("@/assets/" + item.file);
       // this.toggleSound();
       // this.playAgain();
@@ -749,7 +700,12 @@ export default {
         this.durationSecondsDisplay = this.convertTimeHHMMSS(
           this.durationSeconds
         );
-        return (this.playing = this.autoPlay);
+        // return (this.playing = this.autoPlay);
+        let pause = document.getElementById("fa-pause");
+        let play = document.getElementById("fa-play");
+        play.style.display = "none";
+        pause.style.display = "block";
+        this.audio.play();
       }
 
       throw new Error("Failed to load sound file.");
