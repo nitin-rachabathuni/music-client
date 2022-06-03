@@ -33,7 +33,7 @@
           <div class="overflow-y-scroll tableHeight my-1">
             <v-data-table
               :headers="headers"
-              :items="desserts"
+              :items="songsList"
               hide-default-footer
               class="songsList"
               sort-by="calories"
@@ -214,7 +214,7 @@ export default {
       // { text: "URL", align: " d-none", value: "url" },
       { text: "Actions", align: "center", value: "actions", sortable: false },
     ],
-    desserts: [],
+    songsList: [],
     editedIndex: -1,
     editedItem: {
       name: "",
@@ -223,6 +223,7 @@ export default {
       image: "",
       album: "",
       duration: "",
+      fav: 0,
     },
     defaultItem: {
       name: "",
@@ -231,6 +232,7 @@ export default {
       image: "",
       album: "",
       duration: "",
+      fav: 0,
     },
     dialog: false,
     dialogDelete: false,
@@ -257,7 +259,7 @@ export default {
   methods: {
     initialize() {
       axios.get("http://localhost:3000/songs").then((response) => {
-        this.desserts = response.data;
+        this.songsList = response.data;
       });
     },
     onFileChange(e) {
@@ -265,19 +267,19 @@ export default {
       this.selectedFile = selectedFile;
     },
     ditItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.songsList.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.songsList.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
 
     editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.songsList.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
       // this.dialogDelete = true;
@@ -286,10 +288,10 @@ export default {
     deleteItemConfirm() {
       axios
         .delete(
-          `http://localhost:3000/songs/${this.desserts[this.editedIndex].id}`
+          `http://localhost:3000/songs/${this.songsList[this.editedIndex].id}`
         )
         .then(() => {
-          this.desserts.splice(this.editedIndex, 1);
+          this.songsList.splice(this.editedIndex, 1);
           this.closeDelete();
         });
     },
@@ -311,18 +313,11 @@ export default {
     },
 
     save() {
-      console.log(this.editedIndex);
       if (this.editedIndex > -1) {
         this.editedItem.image = "mic Test";
 
         axios.put("http://localhost:3000/songs", this.editedItem).then(() => {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem);
-          // this.desserts.push({
-          //   id: response.data.data,
-          //   name: this.editedItem.name,
-          //   artist: this.editedItem.artist,
-          //   duration: this.editedItem.duration,
-          // });
+          Object.assign(this.songsList[this.editedIndex], this.editedItem);
           this.close();
         });
       } else {
@@ -330,11 +325,12 @@ export default {
         // formData.append("file", this.selectedFile);
         // this.editedItem.image = this.selectedFile;
         this.editedItem.image = "mic Test";
+        // this.editedItem.fav = 0;
 
         axios
           .post("http://localhost:3000/songs", this.editedItem)
           .then((response) => {
-            this.desserts.push({
+            this.songsList.push({
               id: response.data.data,
               name: this.editedItem.name,
               artist: this.editedItem.artist,
