@@ -261,7 +261,7 @@ export default {
   },
   methods: {
     initialize() {
-      axios.get("http://localhost:3000/songs").then((response) => {
+      axios.get("http://ec2-3-19-234-234.us-east-2.compute.amazonaws.com:3000/songs").then((response) => {
         this.songsList = response.data;
       });
     },
@@ -293,7 +293,7 @@ export default {
     deleteItemConfirm() {
       axios
         .delete(
-          `http://localhost:3000/songs/${this.songsList[this.editedIndex].id}`
+          `http://ec2-3-19-234-234.us-east-2.compute.amazonaws.com:3000/songs/${this.songsList[this.editedIndex].id}`
         )
         .then(() => {
           this.songsList.splice(this.editedIndex, 1);
@@ -321,7 +321,7 @@ export default {
       if (this.editedIndex > -1) {
         this.editedItem.image = "mic Test";
 
-        axios.put("http://localhost:3000/songs", this.editedItem).then(() => {
+        axios.put("http://ec2-3-19-234-234.us-east-2.compute.amazonaws.com:3000/songs", this.editedItem).then(() => {
           Object.assign(this.songsList[this.editedIndex], this.editedItem);
           this.close();
         });
@@ -333,7 +333,7 @@ export default {
         // this.editedItem.fav = 0;
 
         axios
-          .post("http://localhost:3000/songs", this.editedItem)
+          .post("http://ec2-3-19-234-234.us-east-2.compute.amazonaws.com:3000/songs", this.editedItem)
           .then((response) => {
             this.songsList.push({
               id: response.data.data,

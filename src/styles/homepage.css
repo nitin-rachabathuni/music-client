@@ -11,6 +11,14 @@
   display: grid;
 }
 
+.manage-link {
+  display: block;
+  padding: 20px 0;
+  font-size: 14px;
+  font-weight: bold;
+  color: rgb(50 65 230) !important;
+}
+
 .main-content {
   border-radius: 1.5rem;
   background-color: rgba(231, 232, 243, 1) !important;

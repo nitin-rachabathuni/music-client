@@ -2,7 +2,13 @@
   <main class="bg-[#e9e9e9] px-[12%] py-5 min-h-screen grid items-center">
     <div class="main-content">
       <div
-        class="left-nav-container rounded-l-3xl text-gray-500 col-span-1 bg-white"
+        class="
+          left-nav-container
+          rounded-l-3xl
+          text-gray-500
+          col-span-1
+          bg-white
+        "
       >
         <div class="p-6">
           <div class="flex justify-between items-center">
@@ -75,7 +81,20 @@
           </nav>
         </div>
         <div
-          class="navbar-user flex justify-between items-center p-5 border-1 border-solid border-t-[#e9e9e9] border-b-transparent border-l-transparent border-r-transparent rounded-bl-3xl"
+          class="
+            navbar-user
+            flex
+            justify-between
+            items-center
+            p-5
+            border-1
+            border-solid
+            border-t-[#e9e9e9]
+            border-b-transparent
+            border-l-transparent
+            border-r-transparent
+            rounded-bl-3xl
+          "
           data-v-50279bc2=""
         >
           <a href="#" data-v-50279bc2=""
@@ -149,7 +168,13 @@
         </div>
       </div>
       <div
-        class="home_conntainer grid grid-cols-3 rounded-3xl col-span-3 bg-[#E7E8F3]"
+        class="
+          home_conntainer
+          grid grid-cols-3
+          rounded-3xl
+          col-span-3
+          bg-[#E7E8F3]
+        "
       >
         <div class="between-container col-span-2 bg-[#E7E8F3] py-5 pl-5 pr-2">
           <header
@@ -166,14 +191,32 @@
               data-v-cd2eed4a=""
             ></i>
             <div
-              class="main-content__search-form flex justify-around px-5 py-2.25 rounded-2xl bg-white w-full cursor-pointer gap-2"
+              class="
+                main-content__search-form
+                flex
+                justify-around
+                px-5
+                py-2.25
+                rounded-2xl
+                bg-white
+                w-full
+                cursor-pointer
+                gap-2
+              "
               data-v-cd2eed4a=""
             >
               <i class="fas fa-search search-btn" data-v-cd2eed4a=""></i
               ><input
                 type="text"
                 @input="searchSong"
-                class="search-input outline-none border-none bg-transparent w-full placeholder-gray-400"
+                class="
+                  search-input
+                  outline-none
+                  border-none
+                  bg-transparent
+                  w-full
+                  placeholder-gray-400
+                "
                 placeholder="Search for artist, songs and..."
                 data-v-cd2eed4a=""
               />
@@ -248,7 +291,14 @@
               data-v-cd2eed4a=""
             >
               <div
-                class="play-control__act flex justify-start items-center text-gray-500 gap-2"
+                class="
+                  play-control__act
+                  flex
+                  justify-start
+                  items-center
+                  text-gray-500
+                  gap-2
+                "
                 data-v-cd2eed4a=""
               >
                 <div
@@ -277,7 +327,13 @@
                 </div>
               </div>
               <div
-                class="play-control__main flex justify-center items-center gap-2"
+                class="
+                  play-control__main
+                  flex
+                  justify-center
+                  items-center
+                  gap-2
+                "
                 data-v-cd2eed4a=""
               >
                 <div
@@ -319,7 +375,13 @@
                 </div>
               </div>
               <div
-                class="play-control__volume flex justify-end items-center text-gray-500"
+                class="
+                  play-control__volume
+                  flex
+                  justify-end
+                  items-center
+                  text-gray-500
+                "
                 data-v-cd2eed4a=""
               >
                 <div data-v-cd2eed4a="">
@@ -347,7 +409,13 @@
               </div>
             </div>
             <div
-              class="play-seekbar flex justify-between items-center text-gray-500 text-sm"
+              class="
+                play-seekbar
+                flex
+                justify-between
+                items-center
+                text-gray-500 text-sm
+              "
               data-v-cd2eed4a=""
             >
               <div class="timer__left" data-v-cd2eed4a="">
@@ -398,6 +466,9 @@
               ></i>
             </p>
             <div class="sidebar__shortcuts-items" data-v-060adb97="">
+              <router-link class="manage-link" to="/manage">
+                Manage
+              </router-link>
               <span class="sidebar__shortcuts-item bg-white" data-v-060adb97=""
                 >Chill
                 <img
@@ -600,22 +671,37 @@ export default {
   },
   methods: {
     initialize() {
-      axios.get("http://localhost:3000/songs").then((response) => {
-        this.songsList = response.data;
-      });
-      axios.get("http://localhost:3000/albums").then((response) => {
-        this.albums = response.data;
-      });
-      axios.get("http://localhost:3000/songs/fav").then((response) => {
-        this.favSongs = response.data;
-      });
+      axios
+        .get(
+          "http://ec2-3-19-234-234.us-east-2.compute.amazonaws.com:3000/songs"
+        )
+        .then((response) => {
+          this.songsList = response.data;
+        });
+      axios
+        .get(
+          "http://ec2-3-19-234-234.us-east-2.compute.amazonaws.com:3000/albums"
+        )
+        .then((response) => {
+          this.albums = response.data;
+        });
+      axios
+        .get(
+          "http://ec2-3-19-234-234.us-east-2.compute.amazonaws.com:3000/songs/fav"
+        )
+        .then((response) => {
+          this.favSongs = response.data;
+        });
     },
     favourite() {
       axios
-        .put("http://localhost:3000/songs/fav", {
-          id: this.currentSong,
-          fav: !this.fav,
-        })
+        .put(
+          "http://ec2-3-19-234-234.us-east-2.compute.amazonaws.com:3000/songs/fav",
+          {
+            id: this.currentSong,
+            fav: !this.fav,
+          }
+        )
         .then(() => {
           this.fav = !this.fav;
           if (this.fav) {
@@ -629,16 +715,22 @@ export default {
     },
     getSongs(item) {
       axios
-        .get(`http://localhost:3000/albums/${item.album}`)
+        .get(
+          `http://ec2-3-19-234-234.us-east-2.compute.amazonaws.com:3000/albums/${item.album}`
+        )
         .then((response) => {
           this.songsList = response.data;
           this.tab = `tab-0`;
         });
     },
     getAllSongs() {
-      axios.get(`http://localhost:3000/songs`).then((response) => {
-        this.songsList = response.data;
-      });
+      axios
+        .get(
+          `http://ec2-3-19-234-234.us-east-2.compute.amazonaws.com:3000/songs`
+        )
+        .then((response) => {
+          this.songsList = response.data;
+        });
     },
     searchSong(e) {
       this.search = e.target.value;
