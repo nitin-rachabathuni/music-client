@@ -23,6 +23,7 @@
               <i class="fas fa-search search-btn" data-v-cd2eed4a=""></i
               ><input
                 type="text"
+                @input="searchSong"
                 class="search-input outline-none border-none bg-transparent w-full placeholder-gray-400"
                 placeholder="Search for artist, songs and..."
                 data-v-cd2eed4a=""
@@ -34,6 +35,7 @@
             <v-data-table
               :headers="headers"
               :items="songsList"
+              :search="search"
               hide-default-footer
               class="songsList"
               sort-by="calories"
@@ -239,6 +241,7 @@ export default {
     menu2: false,
     modal2: false,
     selectedFile: "",
+    search: "",
   }),
   computed: {
     formTitle() {
@@ -271,7 +274,9 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
-
+    searchSong(e) {
+      this.search = e.target.value;
+    },
     deleteItem(item) {
       this.editedIndex = this.songsList.indexOf(item);
       this.editedItem = Object.assign({}, item);

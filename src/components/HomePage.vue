@@ -172,7 +172,7 @@
               <i class="fas fa-search search-btn" data-v-cd2eed4a=""></i
               ><input
                 type="text"
-                @change="searchSong"
+                @input="searchSong"
                 class="search-input outline-none border-none bg-transparent w-full placeholder-gray-400"
                 placeholder="Search for artist, songs and..."
                 data-v-cd2eed4a=""
